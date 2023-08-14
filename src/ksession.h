@@ -25,6 +25,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QTextBrowser>
 
 // Konsole
 #include "Session.h"
@@ -179,6 +180,7 @@ private:
     QString _initialWorkingDirectory;
     Session *m_session;
     TerminalDisplay* terminalDisplay_;
+    QTextBrowser* outputTextBrowser;
 
 };
 

@@ -22,14 +22,14 @@
 
 // Own
 #include "ksession.h"
-#include "Session.h" 
-#include "TerminalDisplay.h"
+#include <iostream>
 
 
 // Qt
 #include <QDebug>
 #include <QTextCodec>
 #include <QRegularExpression>
+#include <QTextBrowser>
 
 // Konsole
 #include "KeyboardTranslator.h"
@@ -40,7 +40,7 @@ KSession::KSession(QObject *parent) : QObject(parent), m_session(createSession("
     connect(m_session, SIGNAL(finished()), this, SLOT(sessionFinished()));
     connect(m_session, SIGNAL(titleChanged()), this, SIGNAL(titleChanged()));
     connect(m_session, &Session::receivedData, this, &KSession::onDataReceived);
-
+    outputTextBrowser = new QTextBrowser;
 }
 
 KSession::~KSession()
@@ -57,11 +57,13 @@ void KSession::onDataReceived(const QString& data)
 {
     static QString accumulatedData;
     accumulatedData += data;
-    accumulatedData.remove(QRegularExpression("\\x1B\\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K|H|J|]"));
     int lineEnd = accumulatedData.indexOf('\n');
     while (lineEnd != -1) {
         QString line = accumulatedData.left(lineEnd).trimmed();
-        // qDebug() << "Received data: " << line;
+        if (!line.isEmpty()) {
+            outputTextBrowser->append(line);
+            std::cout << line.toStdString() << std::endl; // Print to console
+        }
         accumulatedData = accumulatedData.mid(lineEnd + 1);
         lineEnd = accumulatedData.indexOf('\n');
     }
