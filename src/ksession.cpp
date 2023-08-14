@@ -22,20 +22,25 @@
 
 // Own
 #include "ksession.h"
+#include "Session.h" 
+#include "TerminalDisplay.h"
+
 
 // Qt
+#include <QDebug>
 #include <QTextCodec>
+#include <QRegularExpression>
 
 // Konsole
 #include "KeyboardTranslator.h"
 #include "HistorySearch.h"
-
-KSession::KSession(QObject *parent) :
-    QObject(parent), m_session(createSession(""))
+KSession::KSession(QObject *parent) : QObject(parent), m_session(createSession(""))
 {
     connect(m_session, SIGNAL(started()), this, SIGNAL(started()));
     connect(m_session, SIGNAL(finished()), this, SLOT(sessionFinished()));
     connect(m_session, SIGNAL(titleChanged()), this, SIGNAL(titleChanged()));
+    connect(m_session, &Session::receivedData, this, &KSession::onDataReceived);
+
 }
 
 KSession::~KSession()
@@ -44,6 +49,21 @@ KSession::~KSession()
         m_session->close();
         m_session->disconnect();
         delete m_session;
+    }
+}
+
+
+void KSession::onDataReceived(const QString& data)
+{
+    static QString accumulatedData;
+    accumulatedData += data;
+    accumulatedData.remove(QRegularExpression("\\x1B\\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K|H|J|]"));
+    int lineEnd = accumulatedData.indexOf('\n');
+    while (lineEnd != -1) {
+        QString line = accumulatedData.left(lineEnd).trimmed();
+        // qDebug() << "Received data: " << line;
+        accumulatedData = accumulatedData.mid(lineEnd + 1);
+        lineEnd = accumulatedData.indexOf('\n');
     }
 }
 

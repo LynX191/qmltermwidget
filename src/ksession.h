@@ -24,6 +24,7 @@
 #define KSESSION_H
 
 #include <QObject>
+#include <QString>
 
 // Konsole
 #include "Session.h"
@@ -73,6 +74,7 @@ public:
     int historySize() const;
 
     QString getHistory() const;
+    
 
     // Sets whether flow control is enabled
     void setFlowControlEnabled(bool enabled);
@@ -161,6 +163,9 @@ public slots:
     // Search history
     void search(const QString &regexp, int startLine = 0, int startColumn = 0, bool forwards = true );
 
+    // Receive Data
+    void onDataReceived(const QString& data);
+
 protected slots:
     void sessionFinished();
     void selectionChanged(bool textSelected);
@@ -173,6 +178,7 @@ private:
     //Konsole::KTerminalDisplay *m_terminalDisplay;
     QString _initialWorkingDirectory;
     Session *m_session;
+    TerminalDisplay* terminalDisplay_;
 
 };
 
