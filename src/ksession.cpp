@@ -62,7 +62,8 @@ void KSession::onDataReceived(const QString& data)
         QString line = accumulatedData.left(lineEnd).trimmed();
         if (!line.isEmpty()) {
             outputTextBrowser->append(line);
-            std::cout << line.toStdString() << std::endl; // Print to console
+//            std::cout << line.toStdString() << std::endl; // Print to console
+            emit newDataReceived(line); // Emit the signal here
         }
         accumulatedData = accumulatedData.mid(lineEnd + 1);
         lineEnd = accumulatedData.indexOf('\n');

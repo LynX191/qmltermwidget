@@ -134,6 +134,7 @@ signals:
 
     void matchFound(int startColumn, int startLine, int endColumn, int endLine);
     void noMatchFound();
+    void newDataReceived(const QString &data);
 
 public slots:
     /*! Set named key binding for given widget
