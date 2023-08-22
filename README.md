@@ -10,6 +10,7 @@ This package also contains a simple test application.
 To build it:
 
 qmake && make
+sudo make install
 
 To test it:
 
