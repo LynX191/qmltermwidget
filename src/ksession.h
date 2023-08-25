@@ -135,6 +135,8 @@ signals:
     void matchFound(int startColumn, int startLine, int endColumn, int endLine);
     void noMatchFound();
     void newDataReceived(const QString &data);
+    void fullDataReceived1(const QString &fullDocument);
+    void fullDataReceived2(const QString &fullDocument);
 
 public slots:
     /*! Set named key binding for given widget
@@ -166,8 +168,12 @@ public slots:
     void search(const QString &regexp, int startLine = 0, int startColumn = 0, bool forwards = true );
 
     // Receive Data
-    void onDataReceived(const QString& data);
+    void onDataReceived(const QString& data, int pidN);
 
+    void onFullDataReceived(const QString& data, int pidN);
+
+    void sendPID2(int nPID2);
+    void sendPID1(int nPID1);
 protected slots:
     void sessionFinished();
     void selectionChanged(bool textSelected);
@@ -182,6 +188,8 @@ private:
     Session *m_session;
     TerminalDisplay* terminalDisplay_;
     QTextBrowser* outputTextBrowser;
+    int _PID2;
+    int _PID1;
 
 };
 

@@ -40,6 +40,7 @@ KSession::KSession(QObject *parent) : QObject(parent), m_session(createSession("
     connect(m_session, SIGNAL(finished()), this, SLOT(sessionFinished()));
     connect(m_session, SIGNAL(titleChanged()), this, SIGNAL(titleChanged()));
     connect(m_session, &Session::receivedData, this, &KSession::onDataReceived);
+    connect(m_session, &Session::receivedData, this, &KSession::onFullDataReceived);
     outputTextBrowser = new QTextBrowser;
 }
 
@@ -52,24 +53,44 @@ KSession::~KSession()
     }
 }
 
-
-void KSession::onDataReceived(const QString& data)
-{
-    static QString accumulatedData;
-    accumulatedData += data;
-    int lineEnd = accumulatedData.indexOf('\n');
-    while (lineEnd != -1) {
-        QString line = accumulatedData.left(lineEnd).trimmed();
-        if (!line.isEmpty()) {
-            outputTextBrowser->append(line);
-//            std::cout << line.toStdString() << std::endl; // Print to console
-            emit newDataReceived(line); // Emit the signal here
-        }
-        accumulatedData = accumulatedData.mid(lineEnd + 1);
-        lineEnd = accumulatedData.indexOf('\n');
-    }
+void KSession::sendPID1(int nPID1){
+    _PID1 = nPID1;
+}
+void KSession::sendPID2(int nPID2){
+    _PID2 = nPID2;
 }
 
+void KSession::onDataReceived(const QString& data, int pidN)
+{
+//    static QString accumulatedData;
+//    if(pidN == _PID1 ){
+//        accumulatedData += data;
+//        int lineEnd = accumulatedData.indexOf('\n');
+//        while (lineEnd != -1) {
+//            QString line = accumulatedData.left(lineEnd).trimmed();
+//            if (!line.isEmpty()) {
+//                outputTextBrowser->append(line);
+//                emit newDataReceived(line);
+//            }
+//            accumulatedData = accumulatedData.mid(lineEnd + 1);
+//            lineEnd = accumulatedData.indexOf('\n');
+//        }
+//    }
+}
+
+void KSession::onFullDataReceived(const QString& data, int pidN)
+{
+    static QString accumulatedData1;
+    static QString accumulatedData2;
+    if(pidN == _PID1 ){
+    accumulatedData1 += data;
+    emit fullDataReceived1(accumulatedData1);
+    }
+    if(pidN == _PID2 ){
+    accumulatedData2 += data;
+    emit fullDataReceived2(accumulatedData2);
+    }
+}
 void KSession::setTitle(QString name)
 {
     m_session->setTitle(Session::NameRole, name);
@@ -204,7 +225,7 @@ void KSession::setInitialWorkingDirectory(const QString &dir)
         _initialWorkingDirectory = dir;
         m_session->setInitialWorkingDirectory(dir);
         emit initialWorkingDirectoryChanged();
-}   }
+    }   }
 
 QString KSession::getInitialWorkingDirectory()
 {
@@ -262,13 +283,13 @@ void KSession::sendText(QString text)
 void KSession::sendKey(int rep, int key, int mod) const
 {
     //TODO implement or remove this function.
-//    Qt::KeyboardModifier kbm = Qt::KeyboardModifier(mod);
+    //    Qt::KeyboardModifier kbm = Qt::KeyboardModifier(mod);
 
-//    QKeyEvent qkey(QEvent::KeyPress, key, kbm);
+    //    QKeyEvent qkey(QEvent::KeyPress, key, kbm);
 
-//    while (rep > 0){
-//        m_session->sendKey(&qkey);
-//        --rep;
+    //    while (rep > 0){
+    //        m_session->sendKey(&qkey);
+    //        --rep;
     //    }
 }
 
@@ -303,7 +324,7 @@ void KSession::setKeyBindings(const QString &kb)
 
 QString KSession::getKeyBindings()
 {
-   return m_session->keyBindings();
+    return m_session->keyBindings();
 }
 
 QStringList KSession::availableKeyBindings()

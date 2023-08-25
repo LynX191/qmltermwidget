@@ -909,8 +909,9 @@ void Session::zmodemFinished()
 */
 void Session::onReceiveBlock( const char * buf, int len )
 {
+    int getPID = processId();
     _emulation->receiveData( buf, len );
-    emit receivedData( QString::fromLatin1( buf, len ) );
+    emit receivedData( QString::fromLatin1( buf, len ), getPID );
 }
 
 QSize Session::size()
