@@ -1928,9 +1928,7 @@ void TerminalDisplay::scrollBarPositionChanged(int)
 {
   if ( !_screenWindow )
       return;
-
   _screenWindow->scrollTo( _scrollBar->value() );
-
   // if the thumb has been moved to the bottom of the _scrollBar then set
   // the display to automatically track new output,
   // that is, scroll down automatically
@@ -1942,6 +1940,26 @@ void TerminalDisplay::scrollBarPositionChanged(int)
 
   // QMLTermWidget: notify qml side of the change only when needed.
   emit scrollbarValueChanged();
+}
+
+void TerminalDisplay::setScrollBarValue(int lineY) {
+    if ( !_screenWindow )
+        return;
+    _screenWindow->scrollTo( lineY );
+//    qDebug() << mouseYs;
+
+  //  qDebug() << _scrollBar->value();
+    // if the thumb has been moved to the bottom of the _scrollBar then set
+    // the display to automatically track new output,
+    // that is, scroll down automatically
+    // to how new _lines as they are added
+    const bool atEndOfOutput = (lineY == _scrollBar->maximum());
+    _screenWindow->setTrackOutput( atEndOfOutput );
+
+    updateImage();
+
+    // QMLTermWidget: notify qml side of the change only when needed.
+    emit scrollbarValueChanged();
 }
 
 void TerminalDisplay::setScroll(int cursor, int slines)

@@ -91,26 +91,32 @@ class ScreenWindow;
 class KONSOLEPRIVATE_EXPORT TerminalDisplay : public QQuickPaintedItem
 {
    Q_OBJECT
-   Q_PROPERTY(KSession* session         READ getSession      WRITE setSession     NOTIFY sessionChanged          )
-   Q_PROPERTY(QFont font                READ getVTFont       WRITE setVTFont      NOTIFY vtFontChanged           )
-   Q_PROPERTY(QString colorScheme       READ colorScheme     WRITE setColorScheme NOTIFY colorSchemeChanged      )
-   Q_PROPERTY(QSize terminalSize        READ getTerminalSize                      NOTIFY changedContentSizeSignal)
-   Q_PROPERTY(int lineSpacing           READ lineSpacing     WRITE setLineSpacing NOTIFY lineSpacingChanged      )
-   Q_PROPERTY(bool terminalUsesMouse    READ getUsesMouse                         NOTIFY usesMouseChanged        )
-   Q_PROPERTY(int lines                 READ lines                                NOTIFY changedContentSizeSignal)
-   Q_PROPERTY(int columns               READ columns                              NOTIFY changedContentSizeSignal)
-   Q_PROPERTY(int scrollbarCurrentValue READ getScrollbarValue                    NOTIFY scrollbarParamsChanged  )
-   Q_PROPERTY(int scrollbarMaximum      READ getScrollbarMaximum                  NOTIFY scrollbarParamsChanged  )
-   Q_PROPERTY(int scrollbarMinimum      READ getScrollbarMinimum                  NOTIFY scrollbarParamsChanged  )
-   Q_PROPERTY(QSize fontMetrics         READ getFontMetrics                       NOTIFY changedFontMetricSignal )
+   Q_PROPERTY(KSession* session         READ getSession             WRITE setSession            NOTIFY sessionChanged          )
+   Q_PROPERTY(QFont font                READ getVTFont              WRITE setVTFont             NOTIFY vtFontChanged           )
+   Q_PROPERTY(QString colorScheme       READ colorScheme            WRITE setColorScheme        NOTIFY colorSchemeChanged      )
+   Q_PROPERTY(QSize terminalSize        READ getTerminalSize                                    NOTIFY changedContentSizeSignal)
+   Q_PROPERTY(int lineSpacing           READ lineSpacing            WRITE setLineSpacing        NOTIFY lineSpacingChanged      )
+   Q_PROPERTY(bool terminalUsesMouse    READ getUsesMouse                                       NOTIFY usesMouseChanged        )
+   Q_PROPERTY(int lines                 READ lines                                              NOTIFY changedContentSizeSignal)
+   Q_PROPERTY(int columns               READ columns                                            NOTIFY changedContentSizeSignal)
+   Q_PROPERTY(int scrollbarCurrentValue READ getScrollbarValue      WRITE setScrollBarValue     NOTIFY scrollbarParamsChanged  )
+   Q_PROPERTY(int scrollbarMaximum      READ getScrollbarMaximum                                NOTIFY scrollbarParamsChanged  )
+   Q_PROPERTY(int scrollbarMinimum      READ getScrollbarMinimum                                NOTIFY scrollbarParamsChanged  )
+   Q_PROPERTY(QSize fontMetrics         READ getFontMetrics                                     NOTIFY changedFontMetricSignal )
+//   Q_PROPERTY(int currentLine READ getCurrentLine WRITE setScrollBarValue)
 
-   Q_PROPERTY(bool enableBold           READ getBoldIntense   WRITE setBoldIntense NOTIFY boldIntenseChanged )
-   Q_PROPERTY(bool fullCursorHeight     READ fullCursorHeight WRITE setFullCursorHeight NOTIFY fullCursorHeightChanged)
-   Q_PROPERTY(bool blinkingCursor       READ blinkingCursor   WRITE setBlinkingCursor NOTIFY blinkingCursorStateChanged)
-   Q_PROPERTY(bool antialiasText        READ antialias       WRITE setAntialias)
-   Q_PROPERTY(QStringList availableColorSchemes READ availableColorSchemes NOTIFY availableColorSchemesChanged)
+   Q_PROPERTY(bool enableBold           READ getBoldIntense         WRITE setBoldIntense        NOTIFY boldIntenseChanged )
+   Q_PROPERTY(bool fullCursorHeight     READ fullCursorHeight       WRITE setFullCursorHeight   NOTIFY fullCursorHeightChanged)
+   Q_PROPERTY(bool blinkingCursor       READ blinkingCursor         WRITE setBlinkingCursor     NOTIFY blinkingCursorStateChanged)
+   Q_PROPERTY(bool antialiasText        READ antialias              WRITE setAntialias)
+   Q_PROPERTY(QStringList availableColorSchemes READ availableColorSchemes                      NOTIFY availableColorSchemesChanged)
 
 public:
+
+    int getCurrentLine() const; // Getter method declaration
+    void setScrollBarValue(int line); // Setter method declaration
+
+
     /** Constructs a new terminal display widget with the specified parent. */
     TerminalDisplay(QQuickItem *parent=0);
     virtual ~TerminalDisplay();
@@ -957,6 +963,8 @@ private:
     void setFullCursorHeight(bool val);
 
     bool _drawLineChars;
+
+
 
 public:
     static void setTransparencyEnabled(bool enable)

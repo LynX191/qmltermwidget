@@ -45,6 +45,7 @@ class KSession : public QObject
     Q_PROPERTY(bool hasActiveProcess READ hasActiveProcess)
     Q_PROPERTY(QString foregroundProcessName READ foregroundProcessName)
     Q_PROPERTY(QString currentDir READ currentDir)
+//    Q_PROPERTY(int currentLine READ getCurrentLine WRITE setScrollBarValue)
 
 public:
     KSession(QObject *parent = 0);
@@ -53,9 +54,7 @@ public:
 public:
     //bool setup();
     void addView(TerminalDisplay *display);
-    void removeView(TerminalDisplay *display);
-
-    int getRandomSeed();
+    void removeView(TerminalDisplay *display);int getRandomSeed();
     QString getKeyBindings();
 
     //look-n-feel, if you don`t like defaults
@@ -113,6 +112,7 @@ public:
      * Returns the current working directory of the process.
      */
     QString currentDir();
+
 
 signals:
     void started();
@@ -174,6 +174,7 @@ public slots:
 
     void sendPID2(int nPID2);
     void sendPID1(int nPID1);
+    void runEmptyPTY();
 protected slots:
     void sessionFinished();
     void selectionChanged(bool textSelected);
