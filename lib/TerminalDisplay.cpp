@@ -1946,9 +1946,6 @@ void TerminalDisplay::setScrollBarValue(int lineY) {
     if ( !_screenWindow )
         return;
     _screenWindow->scrollTo( lineY );
-//    qDebug() << mouseYs;
-
-  //  qDebug() << _scrollBar->value();
     // if the thumb has been moved to the bottom of the _scrollBar then set
     // the display to automatically track new output,
     // that is, scroll down automatically

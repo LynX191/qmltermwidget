@@ -12,7 +12,6 @@ Item {
 
     anchors.right: terminal.right
 
-    opacity: 1
 
     height: terminal.height //* (lines / (totalLines - minimum))
 //    y: (terminal.height / (totalLines)) * (value - minimum)
@@ -21,21 +20,24 @@ Item {
         NumberAnimation { duration: 300; easing.type: Easing.OutCubic }
     }
     function showScrollbar() {
-        opacity = 1.0;
+        itemScroll.opacity = 1;
         hideTimer.restart();
+        itemScroll.y = (terminal.height / (totalLines)) * (value - minimum)
     }
     Rectangle{
         anchors.fill: parent
+        color: "transparent"
         Rectangle{
             id: itemScroll
-            width: parent.width * 2/3
+            width: parent.width * 1/2
             height: terminal.height * (lines / (totalLines - minimum))
-            y: (terminal.height / (totalLines)) * (value - minimum)
-            anchors.horizontalCenter: parent.horizontalCenter
+//            y: (terminal.height / (totalLines)) * (value - minimum)
+            anchors.left: parent.left
+            anchors.leftMargin: parent.width / 2 - 5
             radius: 15
+            color: "white"
+            opacity: 1
         }
-
-        color: "transparent"
         MouseArea{
             id: mouseScroll
             anchors.fill: parent
@@ -44,7 +46,6 @@ Item {
                 if(itemScroll.y < 0) itemScroll.y = 0
                 if(itemScroll.y > terminal.height - itemScroll.height) itemScroll.y = terminal.height - itemScroll.height
                 terminal.scrollbarCurrentValue = (totalLines - 39)*(mouseY - itemScroll.height / 2) / (terminal.height - itemScroll.height)
-                return
             }
         }
     }
@@ -57,7 +58,7 @@ Item {
     Timer {
         id: hideTimer
         onTriggered: {
-            parent.opacity = 1
+            itemScroll.opacity = 0.5
         }
     }
 }
