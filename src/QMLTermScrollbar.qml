@@ -9,13 +9,11 @@ Item {
     property int maximum: terminal.scrollbarMaximum
     property int lines: terminal.lines
     property int totalLines: lines + maximum
-
+    onValueChanged: {
+        itemScroll.y = value / totalLines * terminal.height
+    }
     anchors.right: terminal.right
-
-
-    height: terminal.height //* (lines / (totalLines - minimum))
-//    y: (terminal.height / (totalLines)) * (value - minimum)
-
+    height: terminal.height
     Behavior on opacity {
         NumberAnimation { duration: 300; easing.type: Easing.OutCubic }
     }
@@ -31,7 +29,6 @@ Item {
             id: itemScroll
             width: parent.width * 1/2
             height: terminal.height * (lines / (totalLines - minimum))
-//            y: (terminal.height / (totalLines)) * (value - minimum)
             anchors.left: parent.left
             anchors.leftMargin: parent.width / 2 - 5
             radius: 15
